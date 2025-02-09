@@ -34,7 +34,7 @@
           "@type": "/cosmos.auth.v1beta1.BaseAccount",
           "address": "cosmos1sxz4pecv8zksxmd3uarapn7rlkyyd7vl7hl4te",
           "pub_key": null,
-          "account_number": "1",
+          "account_number": "2",
           "sequence": "0"
         }
       ]
