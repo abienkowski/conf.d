@@ -153,7 +153,194 @@
       }
     },
     "genutil": {
-      "gen_txs": []
+      "gen_txs": [
+        {
+          "body": {
+            "messages": [
+              {
+                "@type": "/cosmos.staking.v1beta1.MsgCreateValidator",
+                "description": {
+                  "moniker": "Chaos Monkeys",
+                  "identity": "64ABABABABABAB64",
+                  "website": "https://informal.systems",
+                  "security_contact": "validator@informal.systems",
+                  "details": "Chaos Monkeys - infrastructure for testing decentralized intelligence"
+                },
+                "commission": {
+                  "rate": "0.050000000000000000",
+                  "max_rate": "0.200000000000000000",
+                  "max_change_rate": "0.020000000000000000"
+                },
+                "min_self_delegation": "0",
+                "delegator_address": "",
+                "validator_address": "cosmosvaloper1jjfxhhzjppnmrkazp7hrvj908xht8l4cn07h59",
+                "pubkey": {
+                  "@type": "/cosmos.crypto.ed25519.PubKey",
+                  "key": "SeWy1Nz8+anh02Y52OgLDT6RbhAZdbI5UO9K8AWUF9c="
+                },
+                "value": {
+                  "denom": "uatom",
+                  "amount": "10000000"
+                }
+              }
+            ],
+            "memo": "74c2e7042d0c89a6ee305f950c3a607f4bb79fff@172.17.0.2:26656",
+            "timeout_height": "0",
+            "extension_options": [],
+            "non_critical_extension_options": []
+          },
+          "auth_info": {
+            "signer_infos": [
+              {
+                "public_key": {
+                  "@type": "/cosmos.crypto.secp256k1.PubKey",
+                  "key": "AsSiuLhUCngMlJAXnxWTVDmUuZMjOGYXzykncqpE7Mwz"
+                },
+                "mode_info": {
+                  "single": {
+                    "mode": "SIGN_MODE_DIRECT"
+                  }
+                },
+                "sequence": "0"
+              }
+            ],
+            "fee": {
+              "amount": [],
+              "gas_limit": "200000",
+              "payer": "",
+              "granter": ""
+            },
+            "tip": null
+          },
+          "signatures": [
+            "V8TEH1s/zLnXO85apJKtsHcR7W8a0n2kyeY/ThoXlChqAm8y+Zce6HiqcjLzuPTcNPB2XEJvuoFYnG64iBK/Ow=="
+          ]
+        },
+        {
+          "body": {
+            "messages": [
+              {
+                "@type": "/cosmos.staking.v1beta1.MsgCreateValidator",
+                "description": {
+                  "moniker": "Chaos Monkeys",
+                  "identity": "64ABABABABABAB64",
+                  "website": "https://informal.systems",
+                  "security_contact": "validator@informal.systems",
+                  "details": "Chaos Monkeys - infrastructure for testing decentralized intelligence"
+                },
+                "commission": {
+                  "rate": "0.050000000000000000",
+                  "max_rate": "0.200000000000000000",
+                  "max_change_rate": "0.020000000000000000"
+                },
+                "min_self_delegation": "0",
+                "delegator_address": "",
+                "validator_address": "cosmosvaloper145g5wj4rexq8p0v6y3njssanka949txtwecmuz",
+                "pubkey": {
+                  "@type": "/cosmos.crypto.ed25519.PubKey",
+                  "key": "kxu0M1NC4YQEm8pW7JOxyh+fA2yte4NY7uJLnIVRZqg="
+                },
+                "value": {
+                  "denom": "uatom",
+                  "amount": "10000000"
+                }
+              }
+            ],
+            "memo": "8c55ccd79cdc4bf6965d55d89c6b8de11b44c283@172.17.0.2:26656",
+            "timeout_height": "0",
+            "extension_options": [],
+            "non_critical_extension_options": []
+          },
+          "auth_info": {
+            "signer_infos": [
+              {
+                "public_key": {
+                  "@type": "/cosmos.crypto.secp256k1.PubKey",
+                  "key": "A0Cp0Cm0TIck4I9ReFlFKqMfw6B/9OExBg276IUVJTW/"
+                },
+                "mode_info": {
+                  "single": {
+                    "mode": "SIGN_MODE_DIRECT"
+                  }
+                },
+                "sequence": "0"
+              }
+            ],
+            "fee": {
+              "amount": [],
+              "gas_limit": "200000",
+              "payer": "",
+              "granter": ""
+            },
+            "tip": null
+          },
+          "signatures": [
+            "LyIUpy71zDlluGrutWdLsKbDhM8Q+qPlIR6SCfKEK0o+a9L5elTec34ChWzHIXoZHmdXSKz7cPe57jbIgfMGPQ=="
+          ]
+        },
+        {
+          "body": {
+            "messages": [
+              {
+                "@type": "/cosmos.staking.v1beta1.MsgCreateValidator",
+                "description": {
+                  "moniker": "Chaos Monkeys",
+                  "identity": "64ABABABABABAB64",
+                  "website": "https://informal.systems",
+                  "security_contact": "validator@informal.systems",
+                  "details": "Chaos Monkeys - infrastructure for testing decentralized intelligence"
+                },
+                "commission": {
+                  "rate": "0.050000000000000000",
+                  "max_rate": "0.200000000000000000",
+                  "max_change_rate": "0.020000000000000000"
+                },
+                "min_self_delegation": "0",
+                "delegator_address": "",
+                "validator_address": "cosmosvaloper154m4xhwp96wdg0xr8c07jn7fukx7wxreuaa7mx",
+                "pubkey": {
+                  "@type": "/cosmos.crypto.ed25519.PubKey",
+                  "key": "18FTY3cxfm8SG2D0V/dkme/KpIbohvZf/qZCoGBFrRY="
+                },
+                "value": {
+                  "denom": "uatom",
+                  "amount": "10000000"
+                }
+              }
+            ],
+            "memo": "966e1e2d0a565966a9b67b7158ce988f47b9a016@172.17.0.2:26656",
+            "timeout_height": "0",
+            "extension_options": [],
+            "non_critical_extension_options": []
+          },
+          "auth_info": {
+            "signer_infos": [
+              {
+                "public_key": {
+                  "@type": "/cosmos.crypto.secp256k1.PubKey",
+                  "key": "An4C4jyxUd/oPu5TKJuduA1/asLBkUsKZaK9w5emNOyf"
+                },
+                "mode_info": {
+                  "single": {
+                    "mode": "SIGN_MODE_DIRECT"
+                  }
+                },
+                "sequence": "0"
+              }
+            ],
+            "fee": {
+              "amount": [],
+              "gas_limit": "200000",
+              "payer": "",
+              "granter": ""
+            },
+            "tip": null
+          },
+          "signatures": [
+            "eOjhgoSQVMKicx7rxvzv8Ed3uqHssaIYnbw8573SZThSnEgz0C4LMNsIyH6KKS+WTZIsAmjrnOpbEElDwc/vfw=="
+          ]
+        }
+      ]
     },
     "gov": {
       "starting_proposal_id": "1",
