@@ -5,3 +5,8 @@ set sts=4
 set sw=4
 set ai
 set cindent
+
+colorscheme desert
+
+hi DiffAdded      ctermfg=Yellow    ctermbg=NONE
+hi DiffRemoved    ctermfg=Blue      ctermbg=NONE
