@@ -1,6 +1,6 @@
 # conf.d — Personal Configuration Files
 
-Tmux, (neo)vim, and shell aliases — managed in one repo so a new laptop is minutes away from feeling like home.
+Keep your terminal configuration in one place.
 
 ## Prerequisites
 
