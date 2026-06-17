@@ -4,7 +4,7 @@ Keep your terminal configuration in one place.
 
 ## Prerequisites
 
-- **tmux** ≥ 2.1 (`brew install tmux`)
+- **tmux** ≥ 2.1
 - **git**
 - **zsh** (macOS default), bash, or fish
 
@@ -25,7 +25,7 @@ git clone git@github.com:abienkowski/conf.d.git ~/conf.d
 
 ## What the Setup Script Does
 
-1. Clones the repo (if run via curl-pipe) into `~/conf.d`
+1. Downloads the config files directly from GitHub (no clone needed when using the one-liner)
 2. Backs up any existing `~/.tmux.conf`, `~/.vimrc`, `~/.aliases` by renaming them in-place (e.g. `.tmux.conf` → `.tmux.conf-YYYY-MM-DD`). If a backup already exists for today, it's preserved and not overwritten.
 3. Copies the repo's config files into `$HOME`
 4. Clones [TPM](https://github.com/tmux-plugins/tpm) to `~/.tmux/plugins/tpm`
@@ -84,6 +84,14 @@ sed -i '' '/^source.*\/\.aliases/d' ~/.zshrc
 ```
 
 ## Updating
+
+If you used the one-liner, re-run it:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/abienkowski/conf.d/master/setup.sh | bash
+```
+
+If you cloned the repo, pull and re-run:
 
 ```bash
 cd ~/conf.d && git pull && ./setup.sh
