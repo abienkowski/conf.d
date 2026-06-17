@@ -1,3 +1,0 @@
-alias ll='ls -laF'
-alias k="$(which kubectl 2>/dev/null)"
-alias kns="$(which kubens 2>/dev/null)"
