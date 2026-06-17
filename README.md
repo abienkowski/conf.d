@@ -11,7 +11,7 @@ Keep your terminal configuration in one place.
 ## Quick Start
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/abienkowski/conf.d/main/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/abienkowski/conf.d/master/setup.sh | bash
 ```
 
 Then inside tmux press `prefix` + `I` (capital I) to install tmux plugins.
