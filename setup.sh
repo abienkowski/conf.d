@@ -1,40 +1,52 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL="git@github.com:abienkowski/conf.d.git"
-REPO_DIR="${REPO_DIR:-$HOME/conf.d}"
+echo "==> Installing configs"
 
-# If piped via stdin ($0=bash), clone the repo and re-exec
+# Determine source: local repo or download from GitHub
 SCRIPT_DIR="$(cd "$(dirname "${0:-.}")" && pwd 2>/dev/null || true)"
-if [ ! -f "$SCRIPT_DIR/tmux.conf" ]; then
-    echo "==> Setting up conf.d ..."
-    if [ -d "$REPO_DIR" ]; then git -C "$REPO_DIR" pull
-    else git clone "$REPO_URL" "$REPO_DIR"; fi
-    exec "$REPO_DIR/setup.sh"
+if [ -f "$SCRIPT_DIR/tmux.conf" ]; then
+    src_prefix() { echo "$SCRIPT_DIR/$1"; }
+else
+    BASE_URL="https://raw.githubusercontent.com/abienkowski/conf.d/master"
+    TMP_FILES=()
+    cleanup() { rm -f "${TMP_FILES[@]}"; }
+    trap cleanup EXIT
+    src_prefix() {
+        local tmp; tmp="$(mktemp)"
+        TMP_FILES+=("$tmp")
+        curl -fsSL "$BASE_URL/$1" -o "$tmp"
+        echo "$tmp"
+    }
 fi
-REPO_DIR="$SCRIPT_DIR"
 
-echo "==> Installing configs from $REPO_DIR"
+install_file() {
+    local src_name="$1" dst_name="$2"
+    local src dst="$HOME/$dst_name"
+    src="$(src_prefix "$src_name")"
 
-link_config() {
-    local name="$1"
-    local src="$REPO_DIR/$name"
-    local dst="$HOME/$name"
-    if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
-        echo "  [ok] $name"; return
+    if [ -f "$dst" ] && cmp -s "$src" "$dst"; then
+        echo "  [ok] $dst_name"; return
     fi
-    if [ -e "$dst" ] || [ -L "$dst" ]; then
+
+    if [ -f "$dst" ]; then
         local stamp; stamp="$(date +%F)"
-        mv "$dst" "$dst-$stamp"
-        echo "  [backup] $name -> $name-$stamp"
+        local backup="$dst-$stamp"
+        if [ ! -e "$backup" ]; then
+            cp "$dst" "$backup"
+            echo "  [backup] $dst_name -> $dst_name-$stamp"
+        else
+            echo "  [skip] backup $dst_name-$stamp exists"
+        fi
     fi
-    ln -sf "$src" "$dst"
-    echo "  [link] $name"
+
+    cp "$src" "$dst"
+    echo "  [install] $dst_name"
 }
 
-link_config .tmux.conf
-link_config .vimrc
-link_config .aliases
+install_file tmux.conf .tmux.conf
+install_file vimrc .vimrc
+install_file aliases .aliases
 
 # Detect shell rc file and add source for aliases
 SHELL_NAME="$(basename "${SHELL:-zsh}")"

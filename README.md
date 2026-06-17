@@ -11,7 +11,7 @@ Keep your terminal configuration in one place.
 ## Quick Start
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/abienkowski/conf.d/main/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/abienkowski/conf.d/master/setup.sh | bash
 ```
 
 Then inside tmux press `prefix` + `I` (capital I) to install tmux plugins.
@@ -26,8 +26,8 @@ git clone git@github.com:abienkowski/conf.d.git ~/conf.d
 ## What the Setup Script Does
 
 1. Clones the repo (if run via curl-pipe) into `~/conf.d`
-2. Backs up any existing `~/.tmux.conf`, `~/.vimrc`, `~/.aliases` by renaming them in-place (e.g. `.tmux.conf` → `.tmux.conf-2026-06-16`)
-3. Symlinks the repo's config files into `$HOME`
+2. Backs up any existing `~/.tmux.conf`, `~/.vimrc`, `~/.aliases` by renaming them in-place (e.g. `.tmux.conf` → `.tmux.conf-YYYY-MM-DD`). If a backup already exists for today, it's preserved and not overwritten.
+3. Copies the repo's config files into `$HOME`
 4. Clones [TPM](https://github.com/tmux-plugins/tpm) to `~/.tmux/plugins/tpm`
 5. Adds `source ~/.aliases` to your shell's rc file (`~/.zshrc`, `~/.bashrc`, etc.)
 6. Prints post-install steps
@@ -66,27 +66,27 @@ Other settings:
 
 ## Customizing
 
-Edit the files in `~/conf.d/` and the symlinks will pick up the changes automatically. If you want shell-specific aliases that aren't shared across machines, add them directly to your `~/.zshrc` (or equivalent) instead of editing `~/conf.d/aliases`.
+Edit the files in `~/conf.d/` then re-run the setup script to apply changes. If you want shell-specific aliases that aren't shared across machines, add them directly to your `~/.zshrc` (or equivalent) instead of editing `~/conf.d/aliases`.
 
 ## Uninstall
 
 ```bash
-# Remove symlinks
-unlink ~/.tmux.conf
-unlink ~/.vimrc
-unlink ~/.aliases
+# Remove installed files
+rm ~/.tmux.conf
+rm ~/.vimrc
+rm ~/.aliases
 
 # Remove TPM
 rm -rf ~/.tmux/plugins/tpm
 
 # Remove source line from shell rc
-sed -i '' '/^source.*\/conf.d\/aliases/d' ~/.zshrc
+sed -i '' '/^source.*\/\.aliases/d' ~/.zshrc
 ```
 
 ## Updating
 
 ```bash
-cd ~/conf.d && git pull
+cd ~/conf.d && git pull && ./setup.sh
 ```
 
-No other steps needed — symlinks follow the repo automatically. After a tmux config change, reload with `prefix` `r`.
+The script is idempotent — it will skip files that haven't changed. After a tmux config update, reload with `prefix` `r`.
