@@ -79,7 +79,7 @@ rm ~/.aliases
 # Remove TPM
 rm -rf ~/.tmux/plugins/tpm
 
-# Remove source line from shell rc
+# Remove source line from shell rc (use your shell's rc: ~/.bashrc, ~/.config/fish/config.fish)
 sed -i '' '/^source.*\/\.aliases/d' ~/.zshrc
 ```
 
