@@ -1,0 +1,39 @@
+# Shared home-manager configuration (user-level) for all machines.
+{ pkgs, ... }:
+{
+  home = {
+    username = "abienkow";
+    homeDirectory = "/Users/abienkow";
+    stateVersion = "24.11";
+    packages = with pkgs; [
+      # Laptop-local home packages go here (kept lean; system pkgs live in base.nix).
+    ];
+  };
+
+  programs = {
+    zsh = {
+      enable = true;
+      enableCompletion = true;
+      autosuggestion.enable = true;
+      syntaxHighlighting.enable = true;
+      # Powerlevel10k instant prompt — keep near the top of ~/.zshrc.
+      initContent = ''
+        if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+          source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+        fi
+        source ~/.powerlevel10k/powerlevel10k.zsh-theme
+        [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+        export PATH="$HOME/.local/bin:$PATH"
+        source ~/.aliases
+      '';
+    };
+git = {
+      enable = true;
+      settings.user.name = "Adrian Bienkowski";
+      settings.user.email = "adrian@chainsafe.io";
+    };
+  };
+
+  home.sessionPath = [ "/opt/local/bin" "/opt/local/sbin" ];
+  home.sessionVariables = { EDITOR = "nvim"; };
+}
