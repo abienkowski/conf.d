@@ -15,7 +15,14 @@ else
     src_prefix() {
         local tmp; tmp="$(mktemp)"
         TMP_FILES+=("$tmp")
-        curl -fsSL "$BASE_URL/$1" -o "$tmp"
+        curl -fsSL "$BASE_URL/$1" -o "$tmp" || {
+            echo "ERROR: Failed to download $BASE_URL/$1" >&2
+            exit 1
+        }
+        if [ ! -s "$tmp" ]; then
+            echo "ERROR: Downloaded $BASE_URL/$1 is empty" >&2
+            exit 1
+        fi
         echo "$tmp"
     }
 fi
@@ -29,7 +36,7 @@ install_file() {
         echo "  [ok] $dst_name"; return
     fi
 
-    if [ -f "$dst" ]; then
+    if [ -f "$dst" ] || [ -L "$dst" ]; then
         local stamp; stamp="$(date +%F)"
         local backup="$dst-$stamp"
         if [ ! -e "$backup" ]; then
@@ -67,6 +74,7 @@ if [ ! -d "$tpm" ]; then
     git clone https://github.com/tmux-plugins/tpm "$tpm"
     echo "  [tpm] installed"
 else
+    git -C "$tpm" pull --ff-only --quiet 2>/dev/null || true
     echo "  [ok] tpm"
 fi
 
