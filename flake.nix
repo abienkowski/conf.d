@@ -8,6 +8,9 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     agent-of-empires.url = "github:agent-of-empires/agent-of-empires";
+    # aoe tracks nixpkgs-unstable, upstream tracks nixos-unstable. Following
+    # shares our revision (less duplication); if a `nix flake update` ever breaks
+    # the build, drop the `follows` to test against upstream's own pin first.
     agent-of-empires.inputs.nixpkgs.follows = "nixpkgs";
   };
 
