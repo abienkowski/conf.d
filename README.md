@@ -16,6 +16,49 @@ curl -fsSL https://raw.githubusercontent.com/abienkowski/conf.d/master/setup.sh 
 
 Then inside tmux press `prefix` + `I` (capital I) to install tmux plugins.
 
+## Rebuild a machine (Nix / nix-darwin)
+
+This repo also carries the Nix configuration that installs system packages and
+manages the shell across machines — see `flake.nix` and `nix/`. The goal is to
+keep one config common to all hosts, with machine-specific extras in a thin
+per-host module (currently `nix/laptop.nix` for this Mac).
+
+### On a new Mac
+
+```bash
+# 1. Install Nix
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh
+
+# 2. Clone this repo and link it as the nix-darwin config
+git clone git@github.com:abienkowski/conf.d.git ~/conf.d
+ln -s ~/conf.d ~/.config/nix-darwin
+
+# 3. First-time bootstrap (applies system packages, home-manager, zsh, etc.)
+nix run nix-darwin -- switch --flake ~/.config/nix-darwin
+
+# 4. Later rebuilds
+darwin-rebuild switch --flake ~/.config/nix-darwin
+```
+
+<i>`nix run nix-darwin …` is used only for the very first switch; afterwards
+`darwin-rebuild` is installed and on PATH (run it with `sudo` if it asks).</i>
+
+The Nix configuration manages system packages and the shell (zsh, git identity,
+editor). The dotfiles themselves — `aliases`, `tmux.conf`, `vimrc` — are still
+installed by `setup.sh` on any machine, Nix or not (run it once, or install the
+files manually; `~/.aliases` is sourced conditionally if present).
+
+On a fresh machine there is **no** `/opt/local`-first PATH hack to remove — that
+legacy prepend was a MacPorts artifact and is gone. MacPorts itself is still
+reachable at `/opt/local/bin` (appended after the Nix dirs via
+`home.sessionVariablesExtra`).
+
+### Notes
+- ansible-core is pinned to `2.18.13` in `nix/laptop.nix` (an overlay builds it
+  against Python 3.13).
+- `nix/` modules: `base.nix` = shared system packages, `home.nix` = shared
+  home-manager config, `laptop.nix` = per-host extras.
+
 ## Manual Setup
 
 ```bash
