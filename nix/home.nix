@@ -1,11 +1,14 @@
 # Shared home-manager configuration (user-level) for all machines.
-{ pkgs, ... }:
+{ pkgs, aoe, ... }:
 {
   home = {
     username = "abienkow";
     homeDirectory = "/Users/abienkow";
     stateVersion = "24.11";
     packages = with pkgs; [
+      # Agent of Empires — terminal session manager for AI coding agents
+      # (installed from its own flake; requires tmux, which is in base.nix).
+      aoe
       # Laptop-local home packages go here (kept lean; system pkgs live in base.nix).
     ];
   };
