@@ -43,10 +43,15 @@ darwin-rebuild switch --flake ~/.config/nix-darwin
 <i>`nix run nix-darwin …` is used only for the very first switch; afterwards
 `darwin-rebuild` is installed and on PATH (run it with `sudo` if it asks).</i>
 
+The Nix configuration manages system packages and the shell (zsh, git identity,
+editor). The dotfiles themselves — `aliases`, `tmux.conf`, `vimrc` — are still
+installed by `setup.sh` on any machine, Nix or not (run it once, or install the
+files manually; `~/.aliases` is sourced conditionally if present).
+
 On a fresh machine there is **no** `/opt/local`-first PATH hack to remove — that
 legacy prepend was a MacPorts artifact and is gone. MacPorts itself is still
 reachable at `/opt/local/bin` (appended after the Nix dirs via
-`home.sessionPath`).
+`home.sessionVariablesExtra`).
 
 ### Notes
 - ansible-core is pinned to `2.18.13` in `nix/laptop.nix` (an overlay builds it

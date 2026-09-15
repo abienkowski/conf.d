@@ -24,7 +24,7 @@
         source ~/.powerlevel10k/powerlevel10k.zsh-theme
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
         export PATH="$HOME/.local/bin:$PATH"
-        source ~/.aliases
+        [[ -r ~/.aliases ]] && source ~/.aliases
       '';
     };
 git = {
@@ -34,6 +34,11 @@ git = {
     };
   };
 
-  home.sessionPath = [ "/opt/local/bin" "/opt/local/sbin" ];
+  # Append (not prepend) legacy MacPorts dirs after the Nix dirs so Nix-managed
+  # tools (ansible 2.18.13, nvim) take precedence. home.sessionPath prepends,
+  # which would let /opt/local shadow the Nix install — hence sessionVariablesExtra.
+  home.sessionVariablesExtra = ''
+    export PATH="$PATH:/opt/local/bin:/opt/local/sbin"
+  '';
   home.sessionVariables = { EDITOR = "nvim"; };
 }
