@@ -16,6 +16,23 @@ curl -fsSL https://raw.githubusercontent.com/abienkowski/conf.d/master/setup.sh 
 
 Then inside tmux press `prefix` + `I` (capital I) to install tmux plugins.
 
+### Selecting what to install
+
+By default the script installs all three configs (`tmux`, `vimrc`, `aliases`).
+Set `CONF_SETUP` to a comma- or space-separated list to install only some.
+The variable must prefix the shell in the pipe (not `curl`):
+
+```bash
+# only tmux (+ TPM)
+curl -fsSL https://raw.githubusercontent.com/abienkowski/conf.d/master/setup.sh | CONF_SETUP=tmux sh
+
+# tmux and aliases
+curl -fsSL https://raw.githubusercontent.com/abienkowski/conf.d/master/setup.sh | CONF_SETUP=tmux,aliases sh
+```
+
+`CONF_SETUP=all` (or unset/empty) installs everything. Unknown unit names abort
+the script and print the valid values.
+
 ## Rebuild a machine (Nix / nix-darwin)
 
 This repo also carries the Nix configuration that installs system packages and
@@ -70,9 +87,9 @@ git clone git@github.com:abienkowski/conf.d.git ~/conf.d
 
 1. Downloads the config files directly from GitHub (no clone needed when using the one-liner)
 2. Backs up any existing `~/.tmux.conf`, `~/.vimrc`, `~/.aliases` by renaming them in-place (e.g. `.tmux.conf` → `.tmux.conf-YYYY-MM-DD`). If a backup already exists for today, it's preserved and not overwritten.
-3. Copies the repo's config files into `$HOME`
-4. Clones [TPM](https://github.com/tmux-plugins/tpm) to `~/.tmux/plugins/tpm`
-5. Adds `source ~/.aliases` to your shell's rc file (`~/.zshrc`, `~/.bashrc`, etc.)
+3. Installs the selected config files into `$HOME` (see [Selecting what to install](#selecting-what-to-install))
+4. Clones [TPM](https://github.com/tmux-plugins/tpm) to `~/.tmux/plugins/tpm` (tmux unit only)
+5. Adds `source ~/.aliases` to your shell's rc file (`~/.zshrc`, `~/.bashrc`, etc.) (aliases unit only)
 6. Prints post-install steps
 
 The script is **idempotent** — running it again is safe.
@@ -133,6 +150,9 @@ If you used the one-liner, re-run it:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/abienkowski/conf.d/master/setup.sh | bash
 ```
+
+Add `CONF_SETUP=…` in front of `bash` (after the pipe) to limit what is
+reinstalled. See [Selecting what to install](#selecting-what-to-install).
 
 If you cloned the repo, pull and re-run:
 
