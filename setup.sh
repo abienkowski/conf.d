@@ -60,6 +60,7 @@ CONF_SETUP="$(printf '%s' "$CONF_SETUP" | tr ', ' ' ')"
 # shellcheck disable=SC2086
 set -- $CONF_SETUP
 CONF_SETUP="$*"
+[ -z "$CONF_SETUP" ] && CONF_SETUP="all"
 
 units="tmux vimrc aliases"
 
