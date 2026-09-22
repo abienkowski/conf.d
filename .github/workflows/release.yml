@@ -34,7 +34,7 @@ jobs:
           test -f "$SMOKE/1/.vimrc"
           test -f "$SMOKE/1/.aliases"
           test -d "$SMOKE/1/.tmux/plugins/tpm"
-          grep -q "source $HOME/.aliases" "$SMOKE/1/.bashrc"
+          grep -q "source $SMOKE/1/.aliases" "$SMOKE/1/.bashrc"
           # selection: only tmux
           rm -rf "$SMOKE/2" && mkdir -p "$SMOKE/2"
           HOME="$SMOKE/2" SHELL=/bin/bash CONF_SETUP=tmux bash setup.sh
