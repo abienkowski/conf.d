@@ -1,0 +1,104 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Shell syntax checks (bash and dash)
+        run: |
+          sh -n setup.sh
+          dash -n setup.sh
+      - name: Shellcheck
+        uses: ludeeus/action-shellcheck@2.0.0
+        with:
+          scandir: .
+      - name: Smoke test on fresh HOME
+        run: |
+          set -eux
+          # default: installs all three units
+          rm -rf "$SMOKE/1" && mkdir -p "$SMOKE/1"
+          HOME="$SMOKE/1" SHELL=/bin/bash CONF_SETUP='' bash setup.sh
+          test -f "$SMOKE/1/.tmux.conf"
+          test -f "$SMOKE/1/.vimrc"
+          test -f "$SMOKE/1/.aliases"
+          test -d "$SMOKE/1/.tmux/plugins/tpm"
+          grep -q "source $HOME/.aliases" "$SMOKE/1/.bashrc"
+          # selection: only tmux
+          rm -rf "$SMOKE/2" && mkdir -p "$SMOKE/2"
+          HOME="$SMOKE/2" SHELL=/bin/bash CONF_SETUP=tmux bash setup.sh
+          test -f "$SMOKE/2/.tmux.conf"
+          test ! -e "$SMOKE/2/.vimrc"
+          test ! -e "$SMOKE/2/.aliases"
+          # invalid unit aborts
+          rm -rf "$SMOKE/3" && mkdir -p "$SMOKE/3"
+          if HOME="$SMOKE/3" CONF_SETUP=bogus bash setup.sh; then
+            echo "expected pseud 'unknown unit' abort" >&2; exit 1
+          fi
+        env:
+          SMOKE: /tmp/confd-smoke
+      - name: Curl-pipe smoke (real one-liner path)
+        run: |
+          set -eux
+          rm -rf "$SMOKE/4" && mkdir -p "$SMOKE/4"
+          HOME="$SMOKE/4" SHELL=/bin/bash CONF_SETUP=aliases sh -c \
+            'curl -fsSL https://raw.githubusercontent.com/abienkowski/conf.d/master/setup.sh | sh'
+          test -f "$SMOKE/4/.aliases"
+          rm -rf "$SMOKE"
+        env:
+          SMOKE: /tmp/confd-smoke
+
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.bump.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Bump patch version
+        id: bump
+        run: |
+          LATEST=$(git tag --list 'v*' --sort=-v:refname | head -1)
+          [ -z "$LATEST" ] && LATEST="v0.0.0"
+          MAJOR=$(echo "$LATEST" | sed 's/^v//' | cut -d. -f1)
+          MINOR=$(echo "$LATEST" | sed 's/^v//' | cut -d. -f2)
+          PATCH=$(echo "$LATEST" | sed 's/^v//' | cut -d. -f3)
+          echo "tag=v${MAJOR}.${MINOR}.$((PATCH + 1))" >> "$GITHUB_OUTPUT"
+      - name: Create tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "${{ steps.bump.outputs.tag }}"
+          git push origin "${{ steps.bump.outputs.tag }}"
+      - name: Create draft release
+        run: |
+          gh release create "${{ steps.bump.outputs.tag }}" \
+            --title "${{ steps.bump.outputs.tag }}" \
+            --generate-notes \
+            --draft
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  finalize:
+    runs-on: ubuntu-latest
+    needs: [version, tests]
+    steps:
+      - name: Publish draft release
+        run: |
+          gh release edit "${{ needs.version.outputs.tag }}" \
+            --repo "${{ github.repository }}" \
+            --draft=false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
