@@ -29,6 +29,8 @@
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
         export PATH="$HOME/.local/bin:$PATH"
         [[ -r ~/.aliases ]] && source ~/.aliases
+        # Fn+Delete: nix-darwin's /etc/zshrc drops the binding Apple's provided.
+        bindkey "''${terminfo[kdch1]:-^[[3~}" delete-char
       '';
     };
 git = {
