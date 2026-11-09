@@ -11,6 +11,7 @@ if [ -f "$SCRIPT_DIR/tmux.conf" ]; then
 else
     BASE_URL="https://raw.githubusercontent.com/abienkowski/conf.d/master"
     TMP_FILES=""
+    # shellcheck disable=SC2086   # word splitting is required here
     cleanup() { rm -f $TMP_FILES; }
     trap cleanup EXIT
     src_prefix() {
