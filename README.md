@@ -43,22 +43,23 @@ per-host module (currently `nix/laptop.nix` for this Mac).
 ### On a new Mac
 
 ```bash
-# 1. Install Nix
-curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh
+# 1. Install Lix (the Nix implementation recommended by nix-darwin)
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install
 
 # 2. Clone this repo and link it as the nix-darwin config
 git clone git@github.com:abienkowski/conf.d.git ~/conf.d
 ln -s ~/conf.d ~/.config/nix-darwin
 
 # 3. First-time bootstrap (applies system packages, home-manager, zsh, etc.)
-nix run nix-darwin -- switch --flake ~/.config/nix-darwin
+sudo nix run nix-darwin -- switch --flake ~/.config/nix-darwin
 
 # 4. Later rebuilds
-darwin-rebuild switch --flake ~/.config/nix-darwin
+sudo darwin-rebuild switch --flake ~/.config/nix-darwin
 ```
 
-<i>`nix run nix-darwin …` is used only for the very first switch; afterwards
-`darwin-rebuild` is installed and on PATH (run it with `sudo` if it asks).</i>
+<i>`nix run nix-darwin …` is used only for the first switch; afterwards
+`darwin-rebuild` is installed and on PATH. nix-darwin manages the Nix
+installation (`nix.enable = true` in `nix/laptop.nix`).</i>
 
 The Nix configuration manages system packages and the shell (zsh, git identity,
 editor). The dotfiles themselves — `aliases`, `tmux.conf`, `vimrc` — are still
@@ -75,6 +76,22 @@ reachable at `/opt/local/bin` (appended after the Nix dirs via
   against Python 3.13).
 - `nix/` modules: `base.nix` = shared system packages, `home.nix` = shared
   home-manager config, `laptop.nix` = per-host extras.
+
+### Updating the Nix configuration
+
+Flake inputs and package versions are pinned by `flake.lock`. To update only
+Agent of Empires, run this from the configuration directory:
+
+```bash
+nix flake update agent-of-empires
+sudo darwin-rebuild build --flake .#ab-macbook-m5
+sudo darwin-rebuild switch --flake .#ab-macbook-m5
+```
+
+Review and commit the `flake.lock` change with the configuration. To update all
+flake inputs, use `nix flake update` in place of
+`nix flake update agent-of-empires`, then build and switch as above. The build
+step checks the new configuration before activating it.
 
 ## Manual Setup
 
